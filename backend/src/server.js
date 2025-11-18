@@ -8,10 +8,16 @@ import { Link } from "./models/Link.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://tinylink-assignment-cbnpetnmg-vishals-projects-09d6ab4d.vercel.app"
+  ],
+  methods: ["GET", "POST", "DELETE"],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
-app.options("*", cors());
 
 app.use("/api/links", linkRoutes);
 
