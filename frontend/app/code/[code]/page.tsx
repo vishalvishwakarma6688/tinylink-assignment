@@ -14,6 +14,8 @@ export default function StatsPage() {
   const { code } = useParams();
   const router = useRouter();
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const [link, setLink] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,12 +30,10 @@ export default function StatsPage() {
     }
   };
 
-  const deleteLink = async () => {
-    if (!confirm("Delete this link?")) return;
-
+  const confirmDelete = async () => {
     try {
       await api.delete(`/api/links/${code}`);
-      toast.success("Link deleted!");
+      toast.success("Link deleted successfully");
       router.push("/");
     } catch (err) {
       toast.error("Failed to delete");
@@ -51,7 +51,7 @@ export default function StatsPage() {
   }, []);
 
   if (loading) {
-    return <Loader message="Loading link details..." />
+    return <Loader message="Loading link details..." />;
   }
 
   if (!link) {
@@ -85,7 +85,11 @@ export default function StatsPage() {
         </p>
         <p>
           <strong>Short URL:</strong>{" "}
-          <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/${link.code}`} target="_blank" className="text-blue-600">{`${process.env.NEXT_PUBLIC_BASE_URL}/${link.code}`}</Link>
+          <Link
+            href={`${process.env.NEXT_PUBLIC_BASE_URL}/${link.code}`}
+            target="_blank"
+            className="text-blue-600"
+          >{`${process.env.NEXT_PUBLIC_BASE_URL}/${link.code}`}</Link>
         </p>
         <p>
           <strong>Target URL:</strong> {link.url}
@@ -113,7 +117,7 @@ export default function StatsPage() {
           </button>
 
           <button
-            onClick={deleteLink}
+            onClick={() => setShowConfirm(true)}
             className="flex cursor-pointer items-center gap-2 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700"
           >
             <FiTrash2 /> Delete
@@ -149,6 +153,34 @@ export default function StatsPage() {
           Download QR Code
         </button>
       </div>
+      {showConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-[999]">
+          <div className="bg-white rounded-xl p-6 w-[90%] max-w-sm shadow-lg animate-[fadeIn_0.2s_ease]">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Confirm Deletion
+            </h2>
+            <p className="text-gray-600 mt-2">
+              Are you sure you want to delete the link <b>{code}</b>?
+            </p>
+
+            <div className="flex justify-end gap-3 mt-5">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="px-4 cursor-pointer py-2 rounded bg-gray-200 hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmDelete}
+                className="px-4 cursor-pointer py-2 rounded bg-red-600 text-white hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
