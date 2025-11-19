@@ -14,7 +14,7 @@ export default function Dashboard() {
   const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleteCode, setDeleteCode] = useState<string | null>(null);
 
