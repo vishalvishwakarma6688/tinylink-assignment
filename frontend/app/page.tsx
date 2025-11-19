@@ -5,6 +5,8 @@ import api from "../lib/api";
 import LinkTable from "../components/LinkTable";
 import AddLinkForm from "../components/AddLinkForm";
 import { useRouter } from "next/navigation";
+import ConfirmModal from "@/components/ConfirmModal";
+import toast from "react-hot-toast";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -13,6 +15,8 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteCode, setDeleteCode] = useState<string | null>(null);
 
   const fetchLinks = async () => {
     try {
@@ -23,6 +27,18 @@ export default function Dashboard() {
       console.error("Error fetching links:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (code: string) => {
+    if (!code) return;
+    try {
+      await api.delete(`/api/links/${code}`);
+      toast.success("Link deleted successfully");
+      fetchLinks();
+    } catch (err) {
+      toast.error("Failed to delete link");
+      console.error("Delete error:", err);
     }
   };
 
@@ -79,7 +95,7 @@ export default function Dashboard() {
       {loading ? (
         <p className="mt-6 text-gray-500">Loading links...</p>
       ) : (
-        <LinkTable links={filtered} onDelete={fetchLinks} />
+        <LinkTable links={filtered} onDelete={handleDelete} />
       )}
     </div>
   );

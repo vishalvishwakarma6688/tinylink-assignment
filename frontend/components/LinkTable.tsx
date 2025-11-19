@@ -1,22 +1,31 @@
 "use client";
 
-import api from "@/lib/api";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { FiCopy, FiTrash2 } from "react-icons/fi";
 
 export default function LinkTable({ links, onDelete }: any) {
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedCode, setSelectedCode] = useState<string | null>(null);
 
-  const handleDelete = async (code: string) => {
-    try {
-      await api.delete(`/api/links/${code}`);
-      toast.success("Link deleted");
-      onDelete();
-    } catch (err) {
-      console.error("Error deleting link:", err);
-      toast.error("Failed to delete link");
+  const openConfirm = (code: string) => {
+    setSelectedCode(code);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedCode) {
+      onDelete(selectedCode);
     }
+    setShowConfirm(false);
+    setSelectedCode(null);
+  };
+
+  const cancelDelete = () => {
+    setShowConfirm(false);
+    setSelectedCode(null);
   };
 
   if (!links?.length) {
@@ -73,14 +82,8 @@ export default function LinkTable({ links, onDelete }: any) {
                   : "Never"}
               </td>
               <td className="p-3">
-                {/* <button
-                  onClick={() => onDelete(link.code)}
-                  className="text-red-600 cursor-pointer hover:text-red-800"
-                >
-                  <FiTrash2 className="ml-3" size={17} />
-                </button> */}
                 <button
-                  onClick={() => handleDelete(link.code)}
+                  onClick={() => openConfirm(link.code)}
                   className="text-red-600 cursor-pointer hover:text-red-800"
                 >
                   <FiTrash2 className="ml-3" size={17} />
@@ -90,6 +93,33 @@ export default function LinkTable({ links, onDelete }: any) {
           ))}
         </tbody>
       </table>
+      {showConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+          <div className="bg-white rounded-xl p-6 w-[90%] max-w-sm shadow-lg animate-[fadeIn_0.2s_ease]">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Confirm Deletion
+            </h2>
+            <p className="text-gray-600 mt-2">
+              Are you sure you want to delete the link <b>{selectedCode}</b>?
+            </p>
+
+            <div className="flex justify-end gap-3 mt-5">
+              <button
+                onClick={cancelDelete}
+                className="px-4 cursor-pointer py-2 rounded bg-gray-200 hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 cursor-pointer py-2 rounded bg-red-600 text-white hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
