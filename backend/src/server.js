@@ -13,11 +13,13 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:3000",
+    "https://tinylink-assignment.vercel.app",
     "https://tinylink-assignment-cbnpetnmg-vishals-projects-09d6ab4d.vercel.app"
   ],
   methods: ["GET", "POST", "DELETE"],
   allowedHeaders: ["Content-Type"],
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
