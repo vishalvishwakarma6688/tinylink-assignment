@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { FiTrash2, FiCopy, FiArrowLeft } from "react-icons/fi";
 import { QRCodeCanvas } from "qrcode.react";
 import Link from "next/link";
+import Loader from "@/components/Loader";
 
 export default function StatsPage() {
   const { code } = useParams();
@@ -50,7 +51,7 @@ export default function StatsPage() {
   }, []);
 
   if (loading) {
-    return <p className="p-6 text-gray-500">Loading...</p>;
+    return <Loader message="Loading link details..." />
   }
 
   if (!link) {

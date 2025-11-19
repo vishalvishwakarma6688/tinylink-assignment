@@ -7,6 +7,7 @@ import AddLinkForm from "../components/AddLinkForm";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ConfirmModal";
 import toast from "react-hot-toast";
+import Loader from "@/components/Loader";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -93,7 +94,7 @@ export default function Dashboard() {
         />
       </div>
       {loading ? (
-        <p className="mt-6 text-gray-500">Loading links...</p>
+        <Loader message="Loading links..." />
       ) : (
         <LinkTable links={filtered} onDelete={handleDelete} />
       )}

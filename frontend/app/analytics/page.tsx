@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import { FiArrowLeft } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 
 export default function AnalyticsPage() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function AnalyticsPage() {
     api.get("/api/analytics").then((res) => setData(res.data));
   }, []);
 
-  if (!data) return <p className="p-8">Loading analytics...</p>;
+  if (!data) return <Loader message="Loading Analytics..." />;
 
   const clickData = Object.entries(data.dailyClicks).map(([date, clicks]) => ({
     date,
