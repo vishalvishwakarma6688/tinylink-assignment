@@ -59,7 +59,7 @@ export default function StatsPage() {
         <p className="text-xl font-semibold text-red-600">Link not found.</p>
         <button
           onClick={() => router.push("/")}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          className="mt-4 px-4 cursor-pointer py-2 bg-blue-600 text-white rounded"
         >
           Back to Dashboard
         </button>

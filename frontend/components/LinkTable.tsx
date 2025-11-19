@@ -27,7 +27,7 @@ export default function LinkTable({ links, onDelete }: any) {
         <tbody>
           {links.map((link: any) => (
             <tr key={link._id} className="border-t hover:bg-gray-50 transition">
-              <td className="p-3">
+              <td className="p-3 underline" title="Open Detailed Page">
                 <Link href={`/code/${link.code}`}>{link.code}</Link>
               </td>
               <td className="p-3 flex items-center gap-2">

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import linkRoutes from "./routes/linkRoutes.js";
 import { Link } from "./models/Link.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/links", linkRoutes);
+
+app.use("/api/analytics", analyticsRoutes);
 
 app.get("/healthz", (req, res) => {
   res.status(200).json({ ok: true, version: "1.0" });
