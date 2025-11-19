@@ -1,11 +1,24 @@
 "use client";
 
+import api from "@/lib/api";
 import dayjs from "dayjs";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { FiCopy, FiTrash2 } from "react-icons/fi";
 
 export default function LinkTable({ links, onDelete }: any) {
+
+  const handleDelete = async (code: string) => {
+    try {
+      await api.delete(`/api/links/${code}`);
+      toast.success("Link deleted");
+      onDelete();
+    } catch (err) {
+      console.error("Error deleting link:", err);
+      toast.error("Failed to delete link");
+    }
+  };
+
   if (!links?.length) {
     return <p className="text-gray-500 mt-4">No links created yet.</p>;
   }
@@ -13,7 +26,7 @@ export default function LinkTable({ links, onDelete }: any) {
   return (
     <div className="overflow-x-auto mt-6">
       <table className="min-w-full text-sm border rounded-lg overflow-hidden">
-       <thead className="bg-gray-100 font-semibold text-sm">
+        <thead className="bg-gray-100 font-semibold text-sm">
           <tr>
             <th className="p-3 text-left">Code</th>
             <th className="p-3 text-left">Short URL</th>
@@ -31,7 +44,11 @@ export default function LinkTable({ links, onDelete }: any) {
                 <Link href={`/code/${link.code}`}>{link.code}</Link>
               </td>
               <td className="p-3 flex items-center gap-2">
-                <Link target="_blank" href={`${process.env.NEXT_PUBLIC_BASE_URL}/${link.code}`} className="text-blue-600">
+                <Link
+                  target="_blank"
+                  href={`${process.env.NEXT_PUBLIC_BASE_URL}/${link.code}`}
+                  className="text-blue-600"
+                >
                   {`${process.env.NEXT_PUBLIC_BASE_URL}/${link.code}`}
                 </Link>
 
@@ -56,8 +73,14 @@ export default function LinkTable({ links, onDelete }: any) {
                   : "Never"}
               </td>
               <td className="p-3">
-                <button
+                {/* <button
                   onClick={() => onDelete(link.code)}
+                  className="text-red-600 cursor-pointer hover:text-red-800"
+                >
+                  <FiTrash2 className="ml-3" size={17} />
+                </button> */}
+                <button
+                  onClick={() => handleDelete(link.code)}
                   className="text-red-600 cursor-pointer hover:text-red-800"
                 >
                   <FiTrash2 className="ml-3" size={17} />
